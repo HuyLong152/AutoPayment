@@ -35,7 +35,7 @@ app.post('/payment-sheet', async (req, res) => {
   );
   const paymentIntent = await stripe.paymentIntents.create({
     amount: 1099,
-    currency: 'eur',
+    currency: 'VND',
     customer: customer.id,
     automatic_payment_methods: {
       enabled: true,
