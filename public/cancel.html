@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Cancelled</title>
+</head>
+<body>
+    <h1>Payment Cancelled</h1>
+    <div id="result"></div>
+    <script>
+        // Function to fetch query parameters from the URL
+        function getQueryParams() {
+            const params = {};
+            window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) {
+                params[key] = value;
+            });
+            return params;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = getQueryParams();
+            document.getElementById('result').innerHTML = `
+                <p>Transaction ID: ${params.id}</p>
+                <p>Attempted Payment Amount: ${params.price}</p>
+            `;
+        });
+    </script>
+</body>
+</html>

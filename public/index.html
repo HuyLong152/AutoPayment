@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stripe Checkout</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body onload="initiateCheckout()">
+    <script>
+        var stripe = Stripe('pk_test_51PBIYF08bUcYa2HAwT6RAlyMVQ0Va2uI9VuQJEzPXze7M35Rxq4AfNYKYXzZezMIBMY0Uzf77NDrie8U2dT8kPaw00duToWL8Y');
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const price = params.get('price');
+
+        function initiateCheckout() {
+            // Make the POST request to the server to create a checkout session
+            fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ price: price,id: id })  // Send any data required by the server, such as the price
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(session) {
+                // Use the session ID to redirect to Stripe's checkout page
+                stripe.redirectToCheckout({ sessionId: session.sessionId });
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
