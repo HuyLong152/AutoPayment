@@ -20,10 +20,28 @@
         document.addEventListener('DOMContentLoaded', () => {
             const params = getQueryParams();
             document.getElementById('result').innerHTML = `
-                <p>Transaction ID: ${params.id}</p>
-                <p>Paid Amount: ${params.price}</p>
+                <p>Transaction ID: ${params.listProduct}</p>
+                <p>Paid Amount: ${params.totalPrice}</p>
             `;
         });
+
+        fetch('/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ listProduct: listProduct,totalPrice: totalPrice })  // Send any data required by the server, such as the price
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(session) {
+                // Use the session ID to redirect to Stripe's checkout page
+                stripe.redirectToCheckout({ sessionId: session.sessionId });
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+            });
     </script>
 </body>
 </html>

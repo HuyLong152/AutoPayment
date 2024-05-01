@@ -52,31 +52,30 @@ app.post('/payment-sheet', async (req, res) => {
 
 
 app.post('/create-checkout-session', async (req, res) => {
-  const id = req.body.id; // Accessing price sent from client
-  if (!id) {
-      return res.status(400).send("Id order is required");
-  }
+  const listProduct = req.body.listProduct; 
+  const note = req.body.note; 
+  const customer_id = req.body.customer_id; 
+  const discountCode = req.body.discountCode; 
+  const quantity = req.body.quantity; 
+  const payment = req.body.payment; 
+  const totalPrice = req.body.totalPrice; 
 
-  const price = req.body.price; // Accessing price sent from client
-  if (!price) {
-      return res.status(400).send("Price is required");
-  }
 
   const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
           price_data: {
-              currency: 'usd',
+              currency: 'VND',
               product_data: {
-                  name: 'T-shirt',
+                  name: 'Payment your order',
               },
-              unit_amount: price,
+              unit_amount: totalPrice,
           },
           quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${req.headers.origin}/success?id=${id}&price=${price}`,
-      cancel_url: `${req.headers.origin}/cancel?id=${id}&price=${price}`,
+      success_url: `${req.headers.origin}/success?listProduct=${listProduct}&note=${note}&customer_id=${customer_id}&totalPrice=${totalPrice}&discountCode=${discountCode}&quantity=${quantity}&payment=${payment}`,
+      cancel_url: `${req.headers.origin}/cancel?listProduct=${listProduct}&note=${note}&customer_id=${customer_id}&totalPrice=${totalPrice}&discountCode=${discountCode}&quantity=${quantity}&payment=${payment}`,
   });
 
   res.json({ sessionId: session.id });

@@ -9,8 +9,13 @@
     <script>
         var stripe = Stripe('pk_test_51PBZH6GbYCmeINZF9HPhB6QY6o20QHijOiUakKXky3PKcS8CuYAckK6SHnTYmqRZ5dep3S3hZiWT5NMRSgkCC25d00NDHcD8r3');
         const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
-        const price = params.get('price');
+        const listProduct = params.get('listProduct');
+        const totalPrice = params.get('totalPrice');
+        const note = params.get('note');
+        const customer_id = params.get('customer_id');
+        const discountCode = params.get('discountCode');
+        const quantity = params.get('quantity');
+        const payment = params.get('payment');
 
         function initiateCheckout() {
             // Make the POST request to the server to create a checkout session
@@ -19,7 +24,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ price: price,id: id })  // Send any data required by the server, such as the price
+                body: JSON.stringify({ listProduct: listProduct,totalPrice: totalPrice,note:note,customer_id:customer_id,discountCode:discountCode,quantity:quantity,payment:payment})  // Send any data required by the server, such as the price
             })
             .then(function(response) {
                 return response.json();
