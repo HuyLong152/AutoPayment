@@ -16,21 +16,56 @@
             });
             return params;
         }
+        const params = getQueryParams();
+
+        const arr = params.listProduct.slice(1, -1).split(",").map(Number);
+            const note = (params.note == "no%20value")?"":params.note
+            const discountCode = params.discountCode
+
+            const customer_id = params.customer_id; 
+            const quantity = params.quantity; 
+            const payment = params.payment; 
+            const totalPrice = params.totalPrice; 
+
 
         document.addEventListener('DOMContentLoaded', () => {
-            const params = getQueryParams();
             document.getElementById('result').innerHTML = `
                 <p>Transaction ID: ${params.listProduct}</p>
                 <p>Paid Amount: ${params.totalPrice}</p>
+                <p>${params.quantity}<p/>
             `;
+            
+            
+
         });
 
-        fetch('/orders', {
+       if(quantity == -1){
+        fetch('https://517b-2001-ee0-484d-16a0-3c7c-8a8f-d75a-cafb.ngrok-free.app/api_food/public/api/orders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ listProduct: listProduct,totalPrice: totalPrice })  // Send any data required by the server, such as the price
+                body: JSON.stringify({ product_ids: arr,customer_id:customer_id,note:note,payment:payment,discount_id:discountCode})  // Send any data required by the server, such as the price
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                // Use the session ID to redirect to Stripe's checkout page
+                // stripe.redirectToCheckout({ sessionId: session.sessionId });
+                console.log(data.message);
+
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+            });
+       }else{
+        fetch('https://517b-2001-ee0-484d-16a0-3c7c-8a8f-d75a-cafb.ngrok-free.app/api_food/public/api/orders/single', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ product_id: arr[0],quantity:quantity,customer_id:customer_id,note:note,payment:payment,discount_id:discountCode})  // Send any data required by the server, such as the price
             })
             .then(function(response) {
                 return response.json();
@@ -42,6 +77,7 @@
             .catch(function(error) {
                 console.error('Error:', error);
             });
+       }
     </script>
 </body>
 </html>
