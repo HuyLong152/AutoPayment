@@ -62,7 +62,7 @@
         // });
 
        if(quantity == -1){
-        fetch('http://huylong.io.vn/api_food/public/api/orders', {
+        fetch('https://huylong.io.vn/api_food/public/api/orders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -82,7 +82,7 @@
                 console.error('Error:', error);
             });
        }else{
-        fetch('http://huylong.io.vn/api_food/public/api/orders/single', {
+        fetch('https://huylong.io.vn/api_food/public/api/orders/single', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
