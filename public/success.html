@@ -28,7 +28,7 @@
     <div id="result"></div>
     <div class="thank-you">Thank you for your order!</div>
     <script>
-        const BASE_API = "http://huylong.io.vn/api_food/public/api/";
+        const BASE_API = "https://bbd1-116-96-45-74.ngrok-free.app/api_food/public/api/";
         
         function getQueryParams() {
             const params = {};
@@ -68,7 +68,7 @@
             orderData.product_id = arr[0];
             orderData.quantity = quantity;
         }
-
+        console.log(orderData)
         const endpoint = quantity === -1 ? 'orders' : 'orders/single';
 
         fetch(BASE_API + endpoint, {
