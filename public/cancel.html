@@ -3,27 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Payment Cancelled</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        .error-message {
+            font-size: 24px;
+            color: red;
+            margin-top: 20px;
+        }
+        .error-header {
+            font-size: 50px;
+            color: red;
+        }
+    </style>
 </head>
 <body>
-    <h1>Payment Cancelled</h1>
+    <h1 class="error-header" >Payment Cancelled</h1>
     <div id="result"></div>
+    <div class="error-message">Your payment was not successful. Please try again.</div>
     <script>
         // Function to fetch query parameters from the URL
         function getQueryParams() {
             const params = {};
             window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) {
-                params[key] = value;
+                params[key] = decodeURIComponent(value);
             });
             return params;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = getQueryParams();
-            document.getElementById('result').innerHTML = `
-                <p>Transaction ID: ${params.listProduct}</p>
-                <p>Attempted Payment Amount: ${params.totalPrice}</p>
-            `;
-        });
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     const params = getQueryParams();
+        //     document.getElementById('result').innerHTML = `
+        //         <p>Transaction ID: ${params.listProduct}</p>
+        //         <p>Attempted Payment Amount: ${params.totalPrice}</p>
+        //     `;
+        // });
     </script>
 </body>
 </html>

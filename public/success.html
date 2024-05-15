@@ -3,81 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <title>Payment Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        .thank-you {
+            font-size: 24px;
+            color: green;
+            margin-top: 20px;
+        }
+        .thank-you-header {
+            font-size: 50px;
+            color: green;
+        }
+    </style>
 </head>
 <body>
-    <h1>Payment Success</h1>
+    <h1 class="thank-you-header">Payment Success</h1>
     <div id="result"></div>
+    <div class="thank-you">Thank you for your order!</div>
     <script>
-        // Function to fetch query parameters from the URL
+        const BASE_API = "http://huylong.io.vn/api_food/public/api/";
+        
         function getQueryParams() {
             const params = {};
             window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) {
-                params[key] = value;
+                params[key] = decodeURIComponent(value);
             });
             return params;
         }
+
         const params = getQueryParams();
-
         const arr = params.listProduct.slice(1, -1).split(",").map(Number);
-            const note = (params.note == "no%20value")?"":params.note
-            const discountCode = params.discountCode
+        const note = (params.note === "no value") ? "" : params.note;
+        const discountCode = params.discountCode;
+        const customer_id = params.customer_id; 
+        const quantity = parseInt(params.quantity, 10); 
+        const payment = params.payment; 
+        const totalPrice = params.totalPrice; 
 
-            const customer_id = params.customer_id; 
-            const quantity = params.quantity; 
-            const payment = params.payment; 
-            const totalPrice = params.totalPrice; 
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     document.getElementById('result').innerHTML = `
+        //         <p>Transaction ID: ${params.listProduct}</p>
+        //         <p>Total Price: ${params.totalPrice}</p>
+        //         <p>Quantity: ${params.quantity}</p>
+        //     `;
+        // });
 
+        const orderData = {
+            customer_id: customer_id,
+            note: note,
+            payment: payment,
+            discount_id: discountCode
+        };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('result').innerHTML = `
-                <p>Transaction ID: ${params.listProduct}</p>
-                <p>Paid Amount: ${params.totalPrice}</p>
-                <p>${params.quantity}<p/>
-            `;
-            
-            
+        if (quantity === -1) {
+            orderData.product_ids = arr;
+        } else {
+            orderData.product_id = arr[0];
+            orderData.quantity = quantity;
+        }
 
+        const endpoint = quantity === -1 ? 'orders' : 'orders/single';
+
+        fetch(BASE_API + endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-
-       if(quantity == -1){
-        fetch('https://517b-2001-ee0-484d-16a0-3c7c-8a8f-d75a-cafb.ngrok-free.app/api_food/public/api/orders', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ product_ids: arr,customer_id:customer_id,note:note,payment:payment,discount_id:discountCode})  // Send any data required by the server, such as the price
-            })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
-                // Use the session ID to redirect to Stripe's checkout page
-                // stripe.redirectToCheckout({ sessionId: session.sessionId });
-                console.log(data.message);
-
-            })
-            .catch(function(error) {
-                console.error('Error:', error);
-            });
-       }else{
-        fetch('https://517b-2001-ee0-484d-16a0-3c7c-8a8f-d75a-cafb.ngrok-free.app/api_food/public/api/orders/single', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ product_id: arr[0],quantity:quantity,customer_id:customer_id,note:note,payment:payment,discount_id:discountCode})  // Send any data required by the server, such as the price
-            })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(session) {
-                // Use the session ID to redirect to Stripe's checkout page
-                stripe.redirectToCheckout({ sessionId: session.sessionId });
-            })
-            .catch(function(error) {
-                console.error('Error:', error);
-            });
-       }
     </script>
 </body>
 </html>
