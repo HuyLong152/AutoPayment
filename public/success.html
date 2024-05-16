@@ -46,6 +46,7 @@
             const quantity = params.quantity; 
             const payment = params.payment; 
             const totalPrice = params.totalPrice; 
+            const location_id = params.location_id; 
             
             console.log(arr)
 
@@ -67,7 +68,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ product_ids: arr,customer_id:customer_id,note:note,payment:payment,discount_id:discountCode})  // Send any data required by the server, such as the price
+                body: JSON.stringify({ product_ids: arr,customer_id:customer_id,note:note,payment:payment,discount_id:discountCode,location_id:location_id})  // Send any data required by the server, such as the price
             })
             .then(function(response) {
                 return response.json();
@@ -87,7 +88,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ product_id: arr[0],quantity:quantity,customer_id:customer_id,note:note,payment:payment,discount_id:discountCode})  // Send any data required by the server, such as the price
+                body: JSON.stringify({ product_id: arr[0],quantity:quantity,customer_id:customer_id,note:note,payment:payment,discount_id:discountCode,location_id:location_id})  // Send any data required by the server, such as the price
             })
             .then(function(response) {
                 return response.json();

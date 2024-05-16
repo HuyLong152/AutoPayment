@@ -59,6 +59,7 @@ app.post('/create-checkout-session', async (req, res) => {
   const quantity = req.body.quantity; 
   const payment = req.body.payment; 
   const totalPrice = req.body.totalPrice; 
+  const location_id = req.body.location_id; 
 
 
   const session = await stripe.checkout.sessions.create({
@@ -74,8 +75,8 @@ app.post('/create-checkout-session', async (req, res) => {
           quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${req.headers.origin}/success?listProduct=${listProduct}&note=${note}&customer_id=${customer_id}&totalPrice=${totalPrice}&discountCode=${discountCode}&quantity=${quantity}&payment=${payment}`,
-      cancel_url: `${req.headers.origin}/cancel?listProduct=${listProduct}&note=${note}&customer_id=${customer_id}&totalPrice=${totalPrice}&discountCode=${discountCode}&quantity=${quantity}&payment=${payment}`,
+      success_url: `${req.headers.origin}/success?listProduct=${listProduct}&note=${note}&customer_id=${customer_id}&totalPrice=${totalPrice}&discountCode=${discountCode}&quantity=${quantity}&payment=${payment}&location_id=${location_id}`,
+      cancel_url: `${req.headers.origin}/cancel?listProduct=${listProduct}&note=${note}&customer_id=${customer_id}&totalPrice=${totalPrice}&discountCode=${discountCode}&quantity=${quantity}&payment=${payment}&location_id=${location_id}`,
   });
 
   res.json({ sessionId: session.id });
